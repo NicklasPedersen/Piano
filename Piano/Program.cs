@@ -16,37 +16,73 @@ namespace Piano
         static void Main(string[] args)
         {
             string[] arr = File.ReadAllLines(@"..\..\SampleSong.txt");
-            string[] first;
-            string[] second;
-            string[] third;
-            PianoString(out first, out second, out third, arr);
+            PianoString(out string[] five, out string[] four, out string[] three, arr);
             Note[] firstNotes = new Note[39*26];
             Note[] secondNotes = new Note[39*26];
             Note[] thirdNotes = new Note[39*26];
             for (int i = 0; i < firstNotes.Length; i++)
             {
-                string str = first[i / 26][i%26].ToString();
-                firstNotes[i] = new Note(str, 100, 20, 5);
+                string str = five[i / 26][i%26].ToString();
+                firstNotes[i] = new Note(str, 100, 20, 6);
             }
             for (int i = 0; i < firstNotes.Length; i++)
             {
-                string str = second[i / 26][i % 26].ToString();
+                string str = four[i / 26][i % 26].ToString();
                 secondNotes[i] = new Note(str, 100, 20, 5);
             }
             for (int i = 0; i < firstNotes.Length; i++)
             {
-                string str = third[i / 26][i % 26].ToString();
-                thirdNotes[i] = new Note(str, 100, 20, 5);
+                string str = three[i / 26][i % 26].ToString();
+                thirdNotes[i] = new Note(str, 100, 20, 4);
             }
             Thread t5 = new Thread(new ThreadStart(delegate { PlayNote(firstNotes); }));
             Thread t4 = new Thread(new ThreadStart(delegate { PlayNote(secondNotes); }));
             Thread t3 = new Thread(new ThreadStart(delegate { PlayNote(thirdNotes); }));
             MidiPlayer.OpenMidi();
-            t5.Start();
-            t4.Start();
-            t3.Start();
+            //t5.Start();
+            //t4.Start();
+            //t3.Start();
+            Note[,] input = new Note[3,39*26];
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 39*26; j++)
+                {
+                    input[i, j] = i == 0
+                        ? firstNotes[j]
+                        : (i == 1 ? secondNotes[j] : thirdNotes[j]);
+                }
+            }
+
+            PlayNote(input, 130);
             Console.Read();
             MidiPlayer.CloseMidi();
+        }
+
+        static void PlayNote(Note[,] notes, int sleep)
+        {
+            for (int i = 0; i < notes.GetLength(1); i++)
+            {
+                int nextTick = Environment.TickCount + sleep;
+                Console.Write("Current notes: ");
+                for (int j = 0; j < 3; j++)
+                {
+                    Console.Write((notes[j,i].noteChar!='-'? notes[j, i].note :"-") + " ");
+                    if (notes[j, i].noteChar != '-')
+                    {
+                        MidiPlayer.Play(new NoteOn(0, (byte)notes[j,i].noteValue, notes[j,i].note, 100));
+                    }
+                }
+                Console.WriteLine();
+                //Thread.Sleep(Math.Max(nextTick - Environment.TickCount, 0));
+                Thread.Sleep(130);
+                for (int j = 0; j < 3; j++)
+                {
+                    if (notes[j, i].noteChar != '-')
+                    {
+                        MidiPlayer.Play(new NoteOff(0, (byte)notes[j, i].noteValue, notes[j, i].note, 100));
+                    }
+                }
+            }
         }
 
         static void PlayNote(Note[] notes)
@@ -54,7 +90,6 @@ namespace Piano
             int sleep = 130;
             for (int i = 0; i < notes.Length; i++)
             {
-                
                 int nextTick = Environment.TickCount + sleep;
                 if (notes[i].noteChar == '-')
                 {
