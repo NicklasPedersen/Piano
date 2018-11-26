@@ -53,6 +53,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="SampleSong.txt" />
+    <Content Include="SampleSong2.txt" />
+    <Content Include="Toub.Sound.Midi.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

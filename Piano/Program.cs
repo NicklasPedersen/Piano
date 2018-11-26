@@ -15,11 +15,11 @@ namespace Piano
     {
         static void Main(string[] args)
         {
-            string[] arr = File.ReadAllLines(@"..\..\SampleSong.txt");
+            string[] arr = File.ReadAllLines(@"..\..\SampleSong2.txt");
             PianoString(out string[] five, out string[] four, out string[] three, arr);
-            Note[] firstNotes = new Note[39*26];
-            Note[] secondNotes = new Note[39*26];
-            Note[] thirdNotes = new Note[39*26];
+            Note[] firstNotes = new Note[five.Length*26];
+            Note[] secondNotes = new Note[four.Length*26];
+            Note[] thirdNotes = new Note[three.Length*26];
             for (int i = 0; i < firstNotes.Length; i++)
             {
                 string str = five[i / 26][i%26].ToString();
@@ -35,17 +35,11 @@ namespace Piano
                 string str = three[i / 26][i % 26].ToString();
                 thirdNotes[i] = new Note(str, 100, 20, 4);
             }
-            Thread t5 = new Thread(new ThreadStart(delegate { PlayNote(firstNotes); }));
-            Thread t4 = new Thread(new ThreadStart(delegate { PlayNote(secondNotes); }));
-            Thread t3 = new Thread(new ThreadStart(delegate { PlayNote(thirdNotes); }));
             MidiPlayer.OpenMidi();
-            //t5.Start();
-            //t4.Start();
-            //t3.Start();
-            Note[,] input = new Note[3,39*26];
+            Note[,] input = new Note[3,five.Length*26];
             for (int i = 0; i < 3; i++)
             {
-                for (int j = 0; j < 39*26; j++)
+                for (int j = 0; j < five.Length*26; j++)
                 {
                     input[i, j] = i == 0
                         ? firstNotes[j]
