@@ -46,8 +46,8 @@ namespace Piano
         static void Main(string[] args)
         {
             int choice;
-            bool[] setting = new bool[(int)Settings.Exit - (int)Settings.DisplayNotes];
-            Slider[] t = { new Slider(0, 127, 100) };
+            bool[] setting = new bool[(int)Settings.Exit-(int)Settings.DisplayNotes];
+            Slider[] t = {new Slider(0, 127, 100)};
             setting[0] = true;
             do
             {
@@ -55,18 +55,18 @@ namespace Piano
                     ConsoleColor.Cyan);
                 switch (choice)
                 {
-                    case (int)Menu.PlaySongs:
-                        PlaySongs(setting);
-                        break;
-                    case (int)Menu.Settings:
-                        Setting(ref setting, ref t);
-                        break;
-                    default:
-                        break;
+                        case (int)Menu.PlaySongs:
+                            PlaySongs(setting);
+                            break;
+                        case (int)Menu.Settings:
+                            Setting(ref setting, ref t);
+                            break;
+                        default: 
+                            break;
                 }
 
             } while (choice != (int)Menu.Exit);
-
+            
         }
 
         private static void Setting(ref bool[] settings, ref Slider[] sliders)
@@ -75,16 +75,16 @@ namespace Piano
             Tuple<int, ConsoleKey> choice;
             do
             {
-                choice = UIGeneric.UISlidersAndBools("Select an option", ref cursor, typeof(Sliders), typeof(Settings), sliders, settings, ConsoleColor.DarkRed,
+                choice = UIGeneric.UISlidersAndBools("Select an option",ref cursor, typeof(Sliders),typeof(Settings), sliders,settings, ConsoleColor.DarkRed,
                     ConsoleColor.White,
                     ConsoleColor.Cyan);
                 if (choice.Item1 < (int)Settings.DisplayNotes)
                 {
-                    if (choice.Item2 == ConsoleKey.RightArrow) sliders[choice.Item1].Up();
+                    if(choice.Item2==ConsoleKey.RightArrow)sliders[choice.Item1].Up();
                     else sliders[choice.Item1].Down();
                 }
-                else if (choice.Item1 != (int)Settings.Exit)
-                    settings[choice.Item1 - (int)Settings.DisplayNotes] ^= true;
+                else if (choice.Item1 != (int) Settings.Exit )
+                    settings[choice.Item1-(int)Settings.DisplayNotes] ^= true;
 
             } while (choice.Item1 != (int)Settings.Exit);
         }
@@ -102,20 +102,20 @@ namespace Piano
             {
                 choice = UIGeneric.UI("Select a song", typeof(Songs), ConsoleColor.DarkRed, ConsoleColor.White,
                     ConsoleColor.Cyan);
-                if (choice != (int)Songs.Exit)
+                if (choice != (int) Songs.Exit)
                 {
                     Note[,] note;
                     string[] arr = PlayTheNotes(choice, out note);
                     if (choice == 5)
-                        NoteIntepereter(handle, PianoString(arr, true, 3), settings[(int)Settings.DisplayNotes - (int)Settings.DisplayNotes]);
+                        NoteIntepereter(handle, PianoString(arr, true, 3), settings[(int)Settings.DisplayNotes-(int)Settings.DisplayNotes]);
                     else
-                        PlayNote(note, handle, settings[(int)Settings.DisplayNotes - (int)Settings.DisplayNotes]);
+                        PlayNote(note, handle, settings[(int)Settings.DisplayNotes-(int)Settings.DisplayNotes]);
 
                     Console.WriteLine("Press a button to continue... ");
                     Console.ReadKey(true);
                 }
 
-            } while (choice != (int)Songs.Exit);
+            } while (choice != (int) Songs.Exit);
 
             midiOutClose(handle);
         }
@@ -143,7 +143,7 @@ namespace Piano
                     // if not assigns note number in output to the second split in the format {number}|{notes}|{nothing}
                     // or {number}|{notes} but this is not preferred
                     string[] split = t.Split('|');
-                    output[Convert.ToInt32(split[0]) + 1] += split[1];
+                    output[Convert.ToInt32(split[0])+1] += split[1];
                     continue;
                 }
                 // then it pads the rest of the notes to the same length
@@ -176,12 +176,12 @@ namespace Piano
             {
                 lengths[i] = trimmed[i].Length;
             }
-            Note[,] notes = new Note[trimmed.GetLength(0), trimmed[0].Length];
+            Note[,] notes = new Note[trimmed.GetLength(0),trimmed[0].Length];
             for (int i = 0; i < notes.GetLength(0); i++)
             {
                 for (int j = 0; j < trimmed[0].Length; j++)
                 {
-                    notes[i, j] = new Note(Convert.ToString(trimmed[i][j]), 100, 20, i - 1);
+                    notes[i,j] = new Note(Convert.ToString(trimmed[i][j]), 100, 20, i-1);
                 }
             }
 
@@ -190,7 +190,7 @@ namespace Piano
             {
                 for (int j = 0; j < trimmed[0].Length; j++)
                 {
-                    input[i, j] = notes[i + 4, j];
+                    input[i, j] = notes[i+4, j];
                 }
             }
 
@@ -201,28 +201,28 @@ namespace Piano
         [DllImport("winmm.dll")]
         private static extern long MciSendString(string command,
             StringBuilder returnValue, int returnLength, IntPtr winHandle);
-
+ 
         [DllImport("winmm.dll")]
         private static extern int midiOutGetNumDevs();
-
+ 
         [DllImport("winmm.dll")]
         private static extern int midiOutGetDevCaps(int uDeviceID,
             ref MidiOutCaps lpMidiOutCaps, uint cbMidiOutCaps);
-
+ 
         [DllImport("winmm.dll")]
         private static extern int midiOutOpen(ref int handle,
             int deviceID, MidiCallBack proc, int instance, int flags);
-
+ 
         [DllImport("winmm.dll")]
         protected static extern int midiOutShortMsg(int handle,
             int message);
-
+ 
         [DllImport("winmm.dll")]
         protected static extern int midiOutClose(int handle);
 
         private delegate void MidiCallBack(int handle, int msg,
             int instance, int param1, int param2);
-
+        
         static string WriteNotes(string note)
         {
             string output = "";
@@ -234,10 +234,10 @@ namespace Piano
                 }
                 return output;
             }
-
+            
             for (int i = 0; i < Note.noteNumbers.Count; i++)
             {
-                output += Note.noteNumbers[note] != i ? "  -" : note.PadLeft(3);
+                output+=Note.noteNumbers[note]!=i?"  -":note.PadLeft(3);
             }
             return output;
 
@@ -254,13 +254,13 @@ namespace Piano
                     writeString += notes[j, i].noteValue + WriteNotes(notes[j, i].theNote) + "| ";
                     if (notes[j, i].noteChar != '-')
                     {
-
-                        midiOutShortMsg(handle, notes[j, i].ToMessage());
+                        
+                        midiOutShortMsg(handle, notes[j,i].ToMessage());
                     }
                 }
-                if (write)
+                if(write)
                 {
-                    Console.WriteLine("Current notes: " + writeString);
+                    Console.WriteLine("Current notes: "+writeString);
                 }
 
                 //Thread.Sleep(Math.Max(nextTick - Environment.TickCount, 0));
@@ -268,7 +268,7 @@ namespace Piano
             }
         }
 
-        public static void NoteIntepereter(int handle, string[][] notes, bool write)
+        public static void NoteIntepereter(int handle, string [][] notes, bool write)
         {
             bool[][] noteOn = new bool[notes.Length][];
             for (int i = 0; i < noteOn.GetLength(0); i++)
@@ -279,11 +279,11 @@ namespace Piano
             {
                 for (int j = 0; j < notes[0][i].Length; j++)
                 {
-                    if (write) Console.Write("Current notes: ");
-                    for (int k = 0; k < notes.GetLength(0); k++)
+                    if(write)Console.Write("Current notes: ");
+                    for (int k = 0; k < notes.GetLength(0) ; k++)
                     {
-                        if (write) Console.Write(k + 3 + WriteNotes(ToNote(notes[k][i][j])) + "| ");
-                        if (notes[k][i][j] != '-')
+                        if(write)Console.Write(k+3 + WriteNotes(ToNote(notes[k][i][j])) + "| ");
+                        if(notes[k][i][j]!='-')
                         {
                             int noteNum = Note.noteNumbers[ToNote(notes[k][i][j])];
                             int q = (k + 4) * 12 + noteNum;
@@ -292,8 +292,8 @@ namespace Piano
                             midiOutShortMsg(handle, msg);
                         }
                     }
-                    if (write) Console.WriteLine();
-                    Thread.Sleep(130 / 2);
+                    if(write)Console.WriteLine();
+                    Thread.Sleep(130/2);
                 }
             }
         }
@@ -304,7 +304,7 @@ namespace Piano
                 ? noteTrim.ToString().ToUpper()
                 : noteTrim.ToString().ToUpper() + "#";
         }
-        public static string[][] PianoString(string[] input, bool isEnd, int offset)
+        public static string[][] PianoString( string[] input, bool isEnd, int offset)
         {
 
             string[][] notes = new string[3][];
@@ -328,7 +328,7 @@ namespace Piano
             {
                 if (variable != "")
                 {
-                    notes[Convert.ToInt32(variable.Substring(0, 1)) - offset][index] = variable.Substring(2, 26 * 2);
+                    notes[Convert.ToInt32(variable.Substring(0, 1))-offset][index] = variable.Substring(2, 26*2);
                 }
                 else
                 {
@@ -435,7 +435,7 @@ namespace Piano
     }
     class Note
     {
-        public static readonly Dictionary<string, int> noteNumbers = new Dictionary<string, int>
+        public static readonly Dictionary<string,int> noteNumbers = new Dictionary<string, int>
         {
             {"C", 0},
             {"C#", 1},
@@ -484,7 +484,7 @@ namespace Piano
 
         public int ToMessage()
         {
-            return (hardness << 16) + (NoteToInt() << 8) + (end ? 0x80 : 0x90);
+            return (hardness << 16) + (NoteToInt() << 8) + (end ? 0x80 :0x90);
         }
 
         public int NoteToInt()
@@ -499,11 +499,11 @@ namespace Piano
         public ushort wMid;
         public ushort wPid;
         public ushort vDriverVersion;
-
+ 
         [MarshalAs(UnmanagedType.ByValTStr,
             SizeConst = 32)]
         public string szPname;
-
+ 
         public ushort wTechnology;
         public ushort wVoices;
         public ushort wNotes;

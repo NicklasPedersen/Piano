@@ -8,9 +8,10 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Piano</RootNamespace>
     <AssemblyName>Piano</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -43,6 +44,10 @@
     <Reference Include="Toub.Sound.Midi">
       <HintPath>..\..\..\..\Downloads\Libraries\Toub.Sound.Midi.dll</HintPath>
     </Reference>
+    <Reference Include="UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\UI.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -52,9 +57,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SampleSong.txt" />
+    <Content Include="SampleSong1.txt" />
     <Content Include="SampleSong2.txt" />
-    <Content Include="Toub.Sound.Midi.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
